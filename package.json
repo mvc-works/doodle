@@ -1,0 +1,27 @@
+{
+  "name": "doodle",
+  "version": "0.0.1",
+  "description": "for debugging html, like live-reload. but use ws to send reload signal.",
+  "main": "lib/doodle-server.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "bin/doodle"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:jiyinyiyong/doodle.git"
+  },
+  "keywords": [
+    "reload"
+  ],
+  "author": "jiyinyiyong",
+  "license": "BSD",
+  "dependencies": {
+    "ws": "latest"
+  },
+  "bin": {
+    "doodle": "./bin/doodle"
+  }
+}

@@ -9,7 +9,7 @@ delay = (t, f) -> setTimeout f, t
 
 make = ->
   ret = new Date().getTime().toString()
-  show 'reloaded', ret
+  show 'reload time:', ret
   ret
 time = do make
 
@@ -18,20 +18,22 @@ wss = new WebSocketServer port: 8071
 wss.on 'connection', (ws) ->
   show 'connection'
   record = time
-  me = repeat 000, ->
+  me = repeat 1000, ->
     if time isnt record then ws.send 'reload'
   ws.on 'close', ->
     clearInterval me
     show 'close'
 
 watchFile = (name) ->
-  op = interval: 1000
+  show 'watch: ', name
+  op = interval: 500
   fs.watchFile name, op, -> time = do make
 
 watchDir = (name) ->
   list = fs.readdirSync name
   list.forEach (item) ->
-    watchPath (path.join name, item)
+    if item[0] isnt '.'
+      watchPath (path.join name, item)
 
 watchPath = (name) ->
   stat = fs.statSync name
