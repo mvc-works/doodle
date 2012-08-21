@@ -9,7 +9,7 @@ delay = (t, f) -> setTimeout f, t
 
 make = ->
   ret = new Date().getTime().toString()
-  show 'reload time:', ret
+  show 'make time:', ret
   ret
 time = do make
 
@@ -19,14 +19,15 @@ wss.on 'connection', (ws) ->
   show 'connection'
   record = time
   me = repeat 1000, ->
-    if time isnt record then ws.send 'reload'
+    if time isnt record
+     delay 100, -> ws.send 'reload'
   ws.on 'close', ->
     clearInterval me
     show 'close'
 
 watchFile = (name) ->
   show 'watch: ', name
-  op = interval: 500
+  op = interval: 300
   fs.watchFile name, op, -> time = do make
 
 watchDir = (name) ->
