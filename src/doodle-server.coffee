@@ -7,62 +7,26 @@ show = console.log
 repeat = (t, f) -> setInterval f, t
 delay = (t, f) -> setTimeout f, t
 
-make = -> new Date().getTime().toString()
-stemp = do make
+make = ->
+  ret = new Date().getTime().toString()
+  show 'reloaded', ret
+  ret
+time = do make
 
-sendSSE = (res) ->
-  res.writeHead 200,
-    'Content-Type': 'text/event-stream'
-    'Cache-Control': 'no-cache'
-    'Connection': 'keep-alive'
-  record = stemp
-  count = 0
-  me = repeat 1000, ->
-    count += 1
-    if stemp isnt record
-      res.write 'data:...\n\n'
-      clearInterval me
-      show 'use end'
-
-script = path.join __dirname, '../lib/doodle-client.js'
-demo = path.join __dirname, '../example/demo.html'
-
-sendScript = (res) ->
-  res.writeHead 200, 'Content-Type': 'text/javascript'
-  fs.readFile script, (err, data) ->
-    throw err if err?
-    res.end data
-
-sendDemo = (res) ->
-  show 'sendDemo'
-  res.writeHead 200, 'Content-Type': 'text/html'
-  fs.readFile demo, 'utf8', (err, data) ->
-    show data
-    throw err if err?
-    res.end data
-
-here = process.env.PWD
-app = http.createServer (req, res) ->
-  show req.url
-
-  switch req.url
-    when '/?events' then sendSSE res
-    when '/?doodle.js' then sendScript res
-    else
-      filepath = path.join here, req.url
-      show filepath
-      fs.readFile filepath, 'utf8', (err, data) ->
-        if err? then res.end '404'
-        else res.end data
-
-app.listen 7890
+WebSocketServer = require('ws').Server
+wss = new WebSocketServer port: 8071
+wss.on 'connection', (ws) ->
+  show 'connection'
+  record = time
+  me = repeat 000, ->
+    if time isnt record then ws.send 'reload'
+  ws.on 'close', ->
+    clearInterval me
+    show 'close'
 
 watchFile = (name) ->
   op = interval: 1000
-  fs.watchFile name, op, ->
-    stemp = do make
-    show stemp
-  show name
+  fs.watchFile name, op, -> time = do make
 
 watchDir = (name) ->
   list = fs.readdirSync name
@@ -74,10 +38,20 @@ watchPath = (name) ->
   if stat.isDirectory() then watchDir name
   else if stat.isFile() then watchFile name
   else show  'unkown file:', name
+
+here = process.env.PWD
 process.argv[2..].forEach (name) ->
   filepath = path.join here, name
   watchPath filepath
 
-readFile = (name, res) ->
-  fs.readFile name, 'utf8', (err, data) ->
-    res.write data
+app = http.createServer (req, res) ->
+  if req.url is '/doodle.js'
+    res.writeHead 200, 'Content-Type': 'text/javascript'
+    res.end """
+      var ws = new WebSocket('ws://localhost:8071');
+      ws.onmessage = function(message){
+        console.log(message);
+        if (message.data === 'reload') location.reload();
+      };
+      """
+app.listen 8072
