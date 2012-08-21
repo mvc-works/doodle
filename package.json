@@ -17,7 +17,7 @@
     "reload"
   ],
   "author": "jiyinyiyong",
-  "license": "BSD",
+  "license": "MIT",
   "dependencies": {
     "ws": "latest"
   },
