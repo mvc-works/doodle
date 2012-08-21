@@ -50,8 +50,10 @@ app = http.createServer (req, res) ->
     when '/?doodle.js' then sendScript res
     else
       filepath = path.join here, req.url
+      show filepath
       fs.readFile filepath, 'utf8', (err, data) ->
-        res.end data
+        if err? then res.end '404'
+        else res.end data
 
 app.listen 7890
 
