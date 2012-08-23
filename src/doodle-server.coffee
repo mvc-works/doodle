@@ -16,14 +16,14 @@ time = do make
 WebSocketServer = require('ws').Server
 wss = new WebSocketServer port: 8071, host: '0.0.0.0'
 wss.on 'connection', (ws) ->
-  show 'connection'
+  # show 'connection'
   record = time
   me = repeat 1000, ->
     if time isnt record
      delay 100, -> ws.send 'reload'
   ws.on 'close', ->
     clearInterval me
-    show 'close'
+    # show 'close'
 
 watchFile = (name) ->
   show 'watch: ', name
