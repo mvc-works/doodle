@@ -14,7 +14,7 @@ make = ->
 time = do make
 
 WebSocketServer = require('ws').Server
-wss = new WebSocketServer port: 8071
+wss = new WebSocketServer port: 8071, host: '0.0.0.0'
 wss.on 'connection', (ws) ->
   show 'connection'
   record = time
