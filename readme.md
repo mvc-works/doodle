@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/jiyinyiyong/doodle.png)](http://travis-ci.org/jiyinyiyong/doodle)
 
 ### Doodle: reload you html  
 
