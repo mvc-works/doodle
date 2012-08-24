@@ -3,9 +3,11 @@
   <head>
     <title>doodle test</title><script type="text/javascript">
 (function() {
-  var ws;
+  var hostname, ws;
 
-  ws = new WebSocket('ws://localhost:8071');
+  hostname = location.hostname;
+
+  ws = new WebSocket("ws://" + hostname + ":8071");
 
   ws.onmessage = function(message) {
     if (message.data === 'reload') return location.reload();

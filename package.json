@@ -1,6 +1,6 @@
 {
   "name": "doodle",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "for debugging html, like live-reload. but use ws to send reload signal.",
   "main": "lib/doodle-server.js",
   "directories": {
@@ -19,7 +19,7 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "dependencies": {
-    "ws": "latest"
+    "ws": "0.4.x"
   },
   "bin": {
     "doodle": "./bin/doodle"

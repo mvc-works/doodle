@@ -4,6 +4,7 @@
 Command-line tool for making static web pages, save and reload.  
 Use Node to watch files, use `websocket` to notify the html page to reload.  
 The page gets the message an then reload automatically.  
+Connecting and reloading from a another computor is ok.  
 
 ### Usage:  
 
@@ -23,11 +24,13 @@ You can add ether of these code to you html file to reload:
 
     :jade
       script(src='http://localhost:8072/doodle.js')
+      // - `localhost` should be the hostname
 
 2) or add javascript code by yourself:  
 
     :coffeescript
-      ws = new WebSocket 'ws://localhost:8071'
+      hostname = location.hostname
+      ws = new WebSocket "ws://#{hostname}:8071"
       ws.onmessage = (message) ->
         if message.data is 'reload'
           do location.reload

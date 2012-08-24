@@ -51,10 +51,13 @@ app = http.createServer (req, res) ->
   if req.url is '/doodle.js'
     res.writeHead 200, 'Content-Type': 'text/javascript'
     res.end """
-      var ws = new WebSocket('ws://localhost:8071');
-      ws.onmessage = function(message){
-        console.log(message);
-        if (message.data === 'reload') location.reload();
-      };
+      function(){
+        hostname = location.hostname
+        var ws = new WebSocket('ws://' + hostname + ':8071');
+        ws.onmessage = function(message){
+          console.log(message);
+          if (message.data === 'reload') location.reload();
+        };
+      }();
       """
 app.listen 8072
