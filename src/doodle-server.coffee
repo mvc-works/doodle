@@ -14,13 +14,13 @@ make = ->
 time = do make
 
 WebSocketServer = require('ws').Server
-wss = new WebSocketServer port: 8071, host: '0.0.0.0'
+wss = new WebSocketServer port: 7776, host: '0.0.0.0'
 wss.on 'connection', (ws) ->
   # show 'connection'
   record = time
   me = repeat 1000, ->
     if time isnt record
-     delay 100, -> ws.send 'reload'
+     ws.send 'reload'
   ws.on 'close', ->
     clearInterval me
     # show 'close'
@@ -48,16 +48,13 @@ process.argv[2..].forEach (name) ->
   watchPath filepath
 
 app = http.createServer (req, res) ->
+  show 'a request'
   if req.url is '/doodle.js'
     res.writeHead 200, 'Content-Type': 'text/javascript'
-    res.end """
-      function(){
-        hostname = location.hostname
-        var ws = new WebSocket('ws://' + hostname + ':8071');
-        ws.onmessage = function(message){
-          console.log(message);
-          if (message.data === 'reload') location.reload();
-        };
-      }();
-      """
-app.listen 8072
+    filepath = path.join __dirname, 'doodle.js'
+    # show 'filepath', filepath
+    fs.readFile filepath, 'utf-8', (err, data) ->
+      show err if err?
+      res.end data
+      
+app.listen 7777
