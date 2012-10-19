@@ -18,10 +18,11 @@ wss = new WebSocketServer port: 7776, host: '0.0.0.0'
 wss.on 'connection', (ws) ->
   # show 'connection'
   record = time
-  me = repeat 100, ->
+  me = repeat 200, ->
+    # show time
     if time isnt record
+      # show 'reload!'
       try
-        # show ws
         ws.send 'reload'
       catch err
         show 'already closed'
