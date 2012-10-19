@@ -9,7 +9,7 @@ delay = (t, f) -> setTimeout f, t
 
 make = ->
   ret = new Date().getTime().toString()
-  show 'make time:', ret
+  show ret[8..], '&doodle'
   ret
 time = do make
 
@@ -48,7 +48,7 @@ process.argv[2..].forEach (name) ->
   watchPath filepath
 
 app = http.createServer (req, res) ->
-  show 'a request'
+  # show 'a request'
   if req.url is '/doodle.js'
     res.writeHead 200, 'Content-Type': 'text/javascript'
     filepath = path.join __dirname, 'doodle.js'

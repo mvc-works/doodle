@@ -3,7 +3,7 @@ cd `dirname $0`
 
 coffee -o lib/ -wc src/*coffee &
 jade -wP example/*jade &
-node-dev ./bin/doodle example/ &
+node-dev ./bin/doodle example/*html &
 
 read
 

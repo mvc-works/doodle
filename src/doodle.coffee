@@ -2,7 +2,7 @@
 hostname = location.hostname
 ws = new WebSocket "ws://#{hostname}:7776"
 ws.onmessage = (message) ->
-  console.log 'message'
+  # console.log 'message'
   if message.data is 'reload'
     do location.reload
 
