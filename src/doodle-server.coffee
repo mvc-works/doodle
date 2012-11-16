@@ -2,7 +2,8 @@
 fs = require 'fs'
 http = require 'http'
 path = require 'path'
-show = console.log
+# show = console.log
+show = ->
 
 repeat = (t, f) -> setInterval f, t
 delay = (t, f) -> setTimeout f, t
@@ -16,19 +17,20 @@ time = do make
 WebSocketServer = require('ws').Server
 wss = new WebSocketServer port: 7776, host: '0.0.0.0'
 wss.on 'connection', (ws) ->
-  # show 'connection'
+  show 'connection'
   record = time
   me = repeat 200, ->
-    # show time
+    show time, record, (typeof time), (typeof record)
     if time isnt record
-      # show 'reload!'
+      show 'reload...'
+      record = time
       try
         ws.send 'reload'
       catch err
         show 'already closed'
   ws.on 'close', ->
     clearInterval me
-    # show 'close'
+    show 'close'
 
 watchFile = (name) ->
   show 'watch: ', name

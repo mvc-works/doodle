@@ -1,5 +1,6 @@
 
 cd `dirname $0`
+subl -a .
 
 coffee -o lib/ -wc src/*coffee &
 jade -wP example/*jade &
