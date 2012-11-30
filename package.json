@@ -1,6 +1,6 @@
 {
   "name": "doodle",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "for debugging html, like live-reload. but use ws to send reload signal.",
   "main": "lib/doodle-server.js",
   "directories": {
