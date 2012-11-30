@@ -51,8 +51,10 @@ watchPath = (name) ->
 
 here = process.env.PWD
 process.argv[2..].forEach (name) ->
-  filepath = path.join here, name
-  watchPath filepath
+  if name[0]? and (name[0] is '/')
+    watchPath name
+  else
+    watchPath (path.join here, name)
 
 app = http.createServer (req, res) ->
   # show 'a request'
