@@ -15,7 +15,7 @@ center = new events.EventEmitter
 
 print_help = ->
   console.log """
-  
+
   Doodle: watch JS files and reload pages via websocket
 
   doodle dir path dir-2 path-2
@@ -46,6 +46,7 @@ options = {}
 print_help() if "-h" in process.argv
 print_help() if "--help" in process.argv
 print_help() if "help:" in process.argv
+print_help() if watch_files.length is 0
 
 process.argv[2..].forEach (string) ->
   if string.match /\S:\S/
