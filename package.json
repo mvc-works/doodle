@@ -1,6 +1,6 @@
 {
   "name": "doodle",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Doodle: watch JS files and reload pages via websocket",
   "main": "lib/doodle-server.js",
   "directories": {

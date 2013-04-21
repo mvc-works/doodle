@@ -46,7 +46,6 @@ options = {}
 print_help() if "-h" in process.argv
 print_help() if "--help" in process.argv
 print_help() if "help:" in process.argv
-print_help() if watch_files.length is 0
 
 process.argv[2..].forEach (string) ->
   if string.match /\S:\S/
@@ -54,6 +53,8 @@ process.argv[2..].forEach (string) ->
     options[key] = value
   else
     watch_files.push string
+
+print_help() if watch_files.length is 0
 
 if options.log in ["true", "yes", "on"]
   log = console.log
