@@ -11,10 +11,42 @@ log = ->
 
 center = new events.EventEmitter
 
+# print help here
+
+print_help = ->
+  console.log """
+  
+  Doodle: watch JS files and reload pages via websocket
+
+  doodle dir path dir-2 path-2
+  # watchs directories and files
+
+  doodle log:yes dir
+  # open log
+
+  doodle port:7777 dir
+  # set the port serving doodle.js
+
+  doodle ws:7776 dir
+  # set the port websocket listens
+
+  doodle -h
+  doodle --help
+  doodle help:
+  # print help
+
+  """
+  process.exit()
+
 # parse options
 
 watch_files = []
 options = {}
+
+print_help() if "-h" in process.argv
+print_help() if "--help" in process.argv
+print_help() if "help:" in process.argv
+
 process.argv[2..].forEach (string) ->
   if string.match /\S:\S/
     [key, value] = string.split ":"

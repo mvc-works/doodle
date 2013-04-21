@@ -1,5 +1,6 @@
 
-### Doodle: watch JS files and reload pages via websocket
+Doodle: watch JS files and reload pages via websocket
+------
 
 Command-line tool for making static web pages, reload page on save.  
 The page gets the message and then reload automatically.  
@@ -46,7 +47,9 @@ by default, it is `options.http - 1`:
 doodle dir port:7776
 ```
 
-### Client script
+type `doodle help:` or `doodle -h` or `doodle --help` for the list.
+
+#### Client script
 
 `doodle` will open a `ws://` server at port `options.ws`,  
 and put the `doodle.js` file at `options.port`.  
