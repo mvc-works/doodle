@@ -1,8 +1,7 @@
 
-### Doodle: reload you html  
+### Doodle: watch JS files and reload pages via websocket
 
-Command-line tool for making static web pages, save and reload.  
-Uses Node to watch files and dirs, opens a `websocket` connection to notify the html page.  
+Command-line tool for making static web pages, reload page on save.  
 The page gets the message and then reload automatically.  
 Connecting and reloading from a another computor is ok.  
 
@@ -10,22 +9,54 @@ Connecting and reloading from a another computor is ok.
 
 You can install `doodle` from npm by:  
 
-    sudo npm install -g doodle
+```
+sudo npm install -g doodle
+```
 
-Then run this command in your terminal to start waching:  
+Then run this command in your terminal to start waching,  
+both files and directories are fine:
 
-    doodle path1 path2 path3 dir1 dir2 dir3
+```
+doodle path1 path2 path3 dir1 dir2 dir3
+```
 
-`doodle` will open a `ws://` server at port `7776`,  
-and put the `doodle.js` file at `7777`.  
+There are some options you may config,  
+options are in the syntax of `key:value`, order is not required:
 
-You can add a `<script>` tag to you html file to reload:  
+* `log`, print log or not:
 
-    :jade
-      script(src='http://localhost:7777/doodle.js')
-      // - `localhost` should be the hostname
+```
+doodle dir log:true
+doodle dir log:yes
+doodle dir log:on
+doodle log:on dir
+```
 
-check `example/` directory for more details.  
+* `port`, the port serves `doodle.js` on http,  
+by default, it's `7777`:  
+
+```
+doodle dir port:7777
+```
+
+* `ws`, the port websocket listens at,  
+by default, it is `options.http - 1`:
+
+```
+doodle dir port:7776
+```
+
+### Client script
+
+`doodle` will open a `ws://` server at port `options.ws`,  
+and put the `doodle.js` file at `options.port`.  
+
+You can add a `<script>` tag to you html file to reload,  
+the port corresponds to `options.port`:
+
+```jade
+script(src='http://localhost:7777/doodle.js')
+```
 
 ### License:  
 

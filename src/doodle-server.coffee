@@ -1,69 +1,66 @@
 
+# global requires and defines
+
 fs = require 'fs'
 http = require 'http'
 path = require 'path'
-# show = console.log
-show = ->
+chokidar = require "chokidar"
+events = require "events"
 
-repeat = (t, f) -> setInterval f, t
-delay = (t, f) -> setTimeout f, t
+log = ->
 
-make = ->
-  ret = new Date().getTime().toString()
-  show ret[8..], '&doodle'
-  ret
-time = do make
+center = new events.EventEmitter
+
+# parse options
+
+watch_files = []
+options = {}
+process.argv[2..].forEach (string) ->
+  if string.match /\S:\S/
+    [key, value] = string.split ":"
+    options[key] = value
+  else
+    watch_files.push string
+
+if options.log in ["true", "yes", "on"]
+  log = console.log
+
+options.ws = Number options.ws if options.ws?
+options.port = Number options.port if options.port?
+if options.port? and not options.ws?
+  options.ws = options.port - 1
+
+log "options:", options
+log "watching:", watch_files
+
+# starts the websocket server
 
 WebSocketServer = require('ws').Server
-wss = new WebSocketServer port: 7776, host: '0.0.0.0'
+wss = new WebSocketServer
+  port: options.ws or 7776
+  host: '0.0.0.0'
 wss.on 'connection', (ws) ->
-  show 'connection'
-  record = time
-  me = repeat 200, ->
-    show time, record, (typeof time), (typeof record)
-    if time isnt record
-      show 'reload...'
-      record = time
-      try
-        ws.send 'reload'
-      catch err
-        show 'already closed'
-  ws.on 'close', ->
-    clearInterval me
-    show 'close'
+  notify = -> try ws.send "reload"
+  center.on "update", notify
+  ws.on 'close', -> center.removeListener "update", notify
 
-watchFile = (name) ->
-  show 'watch: ', name
-  op = interval: 300
-  fs.watchFile name, op, -> time = do make
+# load client script
 
-watchDir = (name) ->
-  list = fs.readdirSync name
-  list.forEach (item) ->
-    if item[0] isnt '.'
-      watchPath (path.join name, item)
+filename = path.join __dirname, "doodle.js"
+client = fs.readFileSync filename, "utf8"
+client = client.replace /7776/, options.ws if options.ws?
 
-watchPath = (name) ->
-  stat = fs.statSync name
-  if stat.isDirectory() then watchDir name
-  else if stat.isFile() then watchFile name
-  else show  'unkown file:', name
-
-here = process.env.PWD
-process.argv[2..].forEach (name) ->
-  if name[0]? and (name[0] is '/')
-    watchPath name
-  else
-    watchPath (path.join here, name)
+# server the client javascript code
 
 app = http.createServer (req, res) ->
-  # show 'a request'
-  if req.url is '/doodle.js'
-    res.writeHead 200, 'Content-Type': 'text/javascript'
-    filepath = path.join __dirname, 'doodle.js'
-    # show 'filepath', filepath
-    fs.readFile filepath, 'utf-8', (err, data) ->
-      show err if err?
-      res.end data
-      
-app.listen 7777
+  res.writeHead 200, 'Content-Type': 'text/javascript'
+  res.end client
+app.listen (options.port or 7777)
+
+# start listening
+
+watch_files.forEach (file) ->
+  watcher = chokidar.watch file
+  watcher.on "change", (path) ->
+    center.emit "update"
+    log "Update from:", path
