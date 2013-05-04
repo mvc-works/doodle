@@ -8,6 +8,7 @@ chokidar = require "chokidar"
 events = require "events"
 
 log = ->
+delay = (t, f) -> setTimeout f, t
 
 center = new events.EventEmitter
 
@@ -64,6 +65,11 @@ options.port = Number options.port if options.port?
 if options.port? and not options.ws?
   options.ws = options.port - 1
 
+if options.delay?
+  options.delay = Number options.delay
+else
+  options.delay = 100
+
 log "options:", options
 log "watching:", watch_files
 
@@ -96,5 +102,6 @@ app.listen (options.port or 7777)
 watch_files.forEach (file) ->
   watcher = chokidar.watch file
   watcher.on "change", (path) ->
-    center.emit "update"
-    log "Update from:", path
+    delay options.delay, ->
+      center.emit "update"
+      log "Update from:", path

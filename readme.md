@@ -47,6 +47,13 @@ by default, it is `options.http - 1`:
 doodle dir port:7776
 ```
 
+* `delay`, the time between hear file change and trigger a callback,  
+by default, it's `100`
+
+```
+doodle dir delay:200
+```
+
 type `doodle help:` or `doodle -h` or `doodle --help` for the list.
 
 #### Client script

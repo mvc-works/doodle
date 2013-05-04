@@ -8,7 +8,7 @@ echo = (child) ->
 make = (str) -> str.split " "
 
 queue = [
-  "coffee -o lib/ -wc src/"
+  "coffee -o lib/ -wbc src/"
   "jade -wP example/demo-tag.jade"
   "node-dev bin/doodle example/demo-tag.html"
 ]
