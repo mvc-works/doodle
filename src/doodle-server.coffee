@@ -9,6 +9,7 @@ events = require "events"
 
 log = ->
 delay = (t, f) -> setTimeout f, t
+time = (new Date).getTime()
 
 center = new events.EventEmitter
 
@@ -92,10 +93,11 @@ client = client.replace /7776/, options.ws if options.ws?
 
 # server the client javascript code
 
-app = http.createServer (req, res) ->
-  res.writeHead 200, 'Content-Type': 'text/javascript'
-  res.end client
-app.listen (options.port or 7777)
+if options.http in ["true", "yes", "on"]
+  app = http.createServer (req, res) ->
+    res.writeHead 200, 'Content-Type': 'text/javascript'
+    res.end client
+  app.listen (options.port or 7777)
 
 # start listening
 
