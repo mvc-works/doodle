@@ -56,17 +56,31 @@ doodle dir delay:200
 
 type `doodle help:` or `doodle -h` or `doodle --help` for the list.
 
+* `http`, enable HTTP server for client-side listening script
+by default, it's `false`
+
 #### Client script
 
+* doodle-crx
+
 `doodle` will open a `ws://` server at port `options.ws`,  
-and put the `doodle.js` file at `options.port`.  
+
+[doodle-crx](https://github.com/jiyinyiyong/doodle-crx) is recommanded if you are using chrome.
+
+* add script by hand
 
 You can add a `<script>` tag to you html file to reload,  
+using a command option `http:yes` to put `doodle.js` file at `options.port`.  
 the port corresponds to `options.port`:
 
 ```jade
 script(src='http://localhost:7777/doodle.js')
 ```
+
+* copy the code
+
+`coffee/doodle.coffee` shows a demo for listening the ws events and reload,
+put it in you HTML and it would work.
 
 ### License:  
 
