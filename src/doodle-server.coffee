@@ -9,7 +9,7 @@ events = require "events"
 
 log = ->
 delay = (t, f) -> setTimeout f, t
-time = (new Date).getTime()
+time = -> (new Date).getTime()
 
 center = new events.EventEmitter
 
@@ -101,9 +101,14 @@ if options.http in ["true", "yes", "on"]
 
 # start listening
 
+lastTime = time()
+
 watch_files.forEach (file) ->
   watcher = chokidar.watch file
   watcher.on "change", (path) ->
-    delay options.delay, ->
-      center.emit "update"
-      log "Update from:", path
+    thisTime = time()
+    if (thisTime - lastTime) > 100
+      delay options.delay, ->
+        center.emit "update"
+        log "Update from:", path
+    lastTime = thisTime
