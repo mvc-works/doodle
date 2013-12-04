@@ -32,6 +32,9 @@ print_help = ->
   doodle ws:7776 dir
   # set the port websocket listens
 
+  doodle ext:js dir
+  # only watch .js files
+
   doodle -h
   doodle --help
   doodle help:
@@ -103,12 +106,20 @@ if options.http in ["true", "yes", "on"]
 
 lastTime = time()
 
+fire = (filepath) ->
+  delay options.delay, ->
+    center.emit 'update'
+    log "Update from:", filepath
+
 watch_files.forEach (file) ->
   watcher = chokidar.watch file
-  watcher.on "change", (path) ->
+  watcher.on "change", (filepath) ->
     thisTime = time()
     if (thisTime - lastTime) > 100
-      delay options.delay, ->
-        center.emit "update"
-        log "Update from:", path
+      if options.ext?
+        extname = path.extname filepath
+        if extname.indexOf(options.ext) > 0
+          fire filepath
+      else
+        fire filepath
     lastTime = thisTime
